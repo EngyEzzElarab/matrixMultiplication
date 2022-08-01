@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class matrixMultTest {
 
     @org.junit.jupiter.api.Test
-    void matrixMul1() {
+    void matrixMul1() throws Exception {
         int[][] m1 = new int[][]{new int[]
                         {0, 0},
                 new int[]
@@ -17,7 +17,7 @@ class matrixMultTest {
         Assertions.assertArrayEquals(expected, actual);
     }
     @org.junit.jupiter.api.Test
-    void matrixMul2() {
+    void matrixMul2() throws Exception {
         int[][] m1 = new int[][]{new int[]
                 {1, 2},
                 new int[]
@@ -30,7 +30,7 @@ class matrixMultTest {
     }
 
     @org.junit.jupiter.api.Test
-    void matrixMul3() {
+    void matrixMul3() throws Exception {
         int[][] m1 = new int[][]{new int[]
                 {1, 2,3},
                 new int[]
@@ -40,5 +40,19 @@ class matrixMultTest {
         var mult = new matrixMult();
         int[][] actual = mult.matrixMul(m1,m2);
         Assertions.assertArrayEquals(expected, actual);
+    }
+
+    @org.junit.jupiter.api.Test
+    void matrixMul4() throws Exception {
+        int[][] m1 = new int[][]{new int[]
+                {1, 2,3},
+                new int[]
+                        {4, 5,6}};
+        int[][]  m2= (new int[][]{new int[]{1, 2}, new int[]{3,4}});
+        var mult = new matrixMult();
+        assertThrows(Exception.class, () -> {
+            mult.matrixMul(m1,m2);
+        });
+
     }
 }
