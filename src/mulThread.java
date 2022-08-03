@@ -2,41 +2,35 @@ import java.util.concurrent.Callable;
 
 public class mulThread extends Thread {
 
-    private static int[] col;
-    private static int[] row;
+    private  int[] col;
+    private  int[] row;
     private static int res = 0;
-    private static int x;
-    private static int y;
-    public int[][] m;
+    private  int x;
+    private  int y;
+    public int[][] tempMatrix;
 
-    public mulThread(int[] m1Row , int[] m2Col, int[][] mOut , int x, int y)
-    {
-      this.row = m1Row;
-      this.col = m2Col;
-      m=mOut;
-      this.x=x;
-      this.y=y;
+    public mulThread(int[] m1Row, int[] m2Col, int[][] mOut, int x, int y) {
+        this.res = 0;
+        this.row = m1Row;
+        this.col = m2Col;
+        tempMatrix = mOut;
+        this.x = x;
+        this.y = y;
+
     }
 
     @Override
     public void run() {
+        //
+        int sum = 0;
+        for (int i = 0; i < this.row.length; i++) {
 
-        for(int i=0;i< this.row.length;i++)
-        {
-            this.res+= row[i]*col[i];
-           // System.out.println("Hello, thread is running "+this.res);
+            // this.res+= row[i]*col[i];
+            sum += row[i] * col[i];
+            tempMatrix[x][y] = sum;
+
         }
-        m[x][y]= this.res;
-        this.res = 0;
+        System.out.println("Hello, I am thread " + getId() + "responsible for row "+x+" and column "+y+" Result is " + sum);
 
     }
-
-
-
-
-//    @Override
-//    public Object call() throws Exception {
-//
-//        return res;
-//    }
 }
