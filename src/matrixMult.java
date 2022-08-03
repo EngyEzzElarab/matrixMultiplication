@@ -1,5 +1,6 @@
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.Vector;
 
 public class matrixMult {
 
@@ -27,8 +28,8 @@ public class matrixMult {
         return mOut;
     }
 
-    public static String[][] Transpose(String[][] m) {
-        String[][] transpose = new String[m[0].length][m.length];
+    public static int[][] Transpose(int[][] m) {
+        int[][] transpose = new int[m[0].length][m.length];
         for (int i = 0; i < m.length; i++) {
             for (int j = 0; j < m[0].length; j++) {
                 transpose[j][i] = m[i][j];
@@ -39,23 +40,28 @@ public class matrixMult {
     }
 
 
-    public static int[][] matrixMulEfficient(String[][] m1 , String[][] m) throws Exception {
+    public static int[][] matrixMulEfficient(int[][] m1 , int[][] m) throws Exception {
+        Vector<Thread> threads = new Vector<Thread>();
         if(m1[0].length != m.length)
             throw new Exception("incompatible sizes");
         int[][] mOut = new int[m1.length][m[0].length];
-        String[][] m2 = Transpose(m);
+        int[][] m2 = Transpose(m);
         for (int i=0;i<m1.length;i++)
         {
 
             for(int j=0;j<m2.length;j++)
             {
-                int res=0;
-                mulThread t = new mulThread(m1[i], m2[j]);
-               // t.start();
-                res= (int) t.call();
-                System.out.println("Hello, res "+ res);
-                mOut[i][j]=res;
+                mulThread t = new mulThread(m1[i], m2[j],mOut,i,j);
+                t.start();
+                t.sleep(10);
+                threads.add(t);
             }
+
+        }
+        System.out.println(threads.size());
+        for (Thread t : threads) {
+            if(t.isAlive() == true)
+                t.join();
         }
         return mOut;
     }
@@ -63,31 +69,43 @@ public class matrixMult {
     public static void main(String[] args) throws Exception {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter NUmber of rows of matrix 1");
-        int x1 = Integer.parseInt(sc.nextLine());
+        int x1 = sc.nextInt();
         System.out.println("Enter NUmber of cols of matrix 1");
-        int y1 = Integer.parseInt(sc.nextLine());
-        String[][] s1 = new String[x1][y1];
+        int y1 = sc.nextInt();
+        int[][] s1 = new int[x1][y1];
         System.out.println("x1 "+x1);
+        System.out.println("y1 "+y1);
         for (int i=0;i<x1;i++)
         {
             System.out.println("Enter rows of matrix 1");
-            String text = sc.nextLine();
-            s1[i] = text.split(" ");
-            System.out.println(text);
+            for (int j=0;j<y1;j++)
+            {
+                s1[i][j] = sc.nextInt();
+                System.out.println(s1[i][j]);
+            }
+
         }
+
         System.out.println("Enter NUmber of rows of matrix 2");
-        int x2 = Integer.parseInt(sc.nextLine());
+        int x2 = sc.nextInt();
         System.out.println("Enter NUmber of cols of matrix 2");
-        int y2 = Integer.parseInt(sc.nextLine());
-        String[][] s2 = new String[x2][y2];
+        int y2 = sc.nextInt();
+        int[][] s2 = new int[x2][y2];
         System.out.println("x2 "+x2);
 
         for (int i=0;i<x2;i++)
         {
             System.out.println("Enter rows of matrix 2");
-            s2[i] = sc.nextLine().split(" ");
-        }
+            for (int j=0;j<y2;j++)
+            {
+                s2[i][j] = sc.nextInt();
+            }
 
+        }
+//        System.out.println(Arrays.toString(s1[0]));
+//        System.out.println(Arrays.toString(s1[1]));
+//        System.out.println(Arrays.toString(s2[0]));
+//        System.out.println(Arrays.toString(s2[1]));
 //        int[][]m1 = new int[][]{{1, 2}, {3,4}};
 //       int[][] m2= new int[][]{{2,1}, {3,1}};
        int[][] m3 = matrixMulEfficient(s1,s2);
